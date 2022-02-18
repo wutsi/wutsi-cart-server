@@ -7,6 +7,7 @@ import com.wutsi.platform.cart.entity.CartEntity
 import com.wutsi.platform.cart.entity.ProductEntity
 import com.wutsi.platform.cart.service.SecurityManager
 import com.wutsi.platform.core.logging.KVLogger
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 import javax.transaction.Transactional
@@ -18,6 +19,7 @@ class AddProductDelegate(
     private val securityManager: SecurityManager,
     private val logger: KVLogger,
 ) {
+    @CacheEvict(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
     @Transactional
     fun invoke(merchantId: Long, request: AddProductRequest) {
         // Account

@@ -1,13 +1,21 @@
 package com.wutsi.platform.cart.endpoint
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.cart.dao.CartRepository
 import com.wutsi.platform.cart.dao.ProductRepository
 import com.wutsi.platform.cart.dto.AddProductRequest
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.cache.Cache
+import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
@@ -22,6 +30,19 @@ public class AddProductControllerTest : AbstractSecuredController() {
 
     @Autowired
     private lateinit var productDao: ProductRepository
+
+    @MockBean
+    private lateinit var cacheManager: CacheManager
+
+    @MockBean
+    private lateinit var cache: Cache
+
+    @BeforeEach
+    override fun setUp() {
+        super.setUp()
+
+        doReturn(cache).whenever(cacheManager).getCache(any())
+    }
 
     @Test
     public fun createCart() {
@@ -38,6 +59,8 @@ public class AddProductControllerTest : AbstractSecuredController() {
         val product = productDao.findByCartAndProductId(cart.get(), request.productId)
         assertTrue(product.isPresent)
         assertEquals(request.quantity, product.get().quantity)
+
+        verify(cache).evict(any())
     }
 
     @Test
@@ -55,6 +78,8 @@ public class AddProductControllerTest : AbstractSecuredController() {
         val product = productDao.findByCartAndProductId(cart.get(), request.productId)
         assertTrue(product.isPresent)
         assertEquals(request.quantity, product.get().quantity)
+
+        verify(cache).evict(any())
     }
 
     @Test

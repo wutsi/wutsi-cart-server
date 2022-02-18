@@ -1,17 +1,25 @@
 package com.wutsi.platform.cart.endpoint
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.cart.dao.CartRepository
 import com.wutsi.platform.cart.dao.ProductRepository
 import com.wutsi.platform.cart.dto.UpdateProductRequest
 import com.wutsi.platform.cart.error.ErrorURN
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.cache.Cache
+import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.test.assertEquals
@@ -28,6 +36,19 @@ public class UpdateProductControllerTest : AbstractSecuredController() {
     @Autowired
     private lateinit var productDao: ProductRepository
 
+    @MockBean
+    private lateinit var cacheManager: CacheManager
+
+    @MockBean
+    private lateinit var cache: Cache
+
+    @BeforeEach
+    override fun setUp() {
+        super.setUp()
+
+        doReturn(cache).whenever(cacheManager).getCache(any())
+    }
+
     @Test
     public fun update() {
         // WHEN
@@ -43,6 +64,8 @@ public class UpdateProductControllerTest : AbstractSecuredController() {
         val product = productDao.findByCartAndProductId(cart.get(), 1)
         assertTrue(product.isPresent)
         assertEquals(request.quantity, product.get().quantity)
+
+        verify(cache).evict(any())
     }
 
     @Test
