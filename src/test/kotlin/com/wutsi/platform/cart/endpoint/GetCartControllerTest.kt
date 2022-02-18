@@ -1,10 +1,15 @@
 package com.wutsi.platform.cart.endpoint
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.platform.cart.dto.GetCartResponse
+import com.wutsi.platform.cart.error.ErrorURN
+import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.jdbc.Sql
+import org.springframework.web.client.HttpClientErrorException
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,14 +34,15 @@ public class GetCartControllerTest : AbstractSecuredController() {
 
     @Test
     public fun cartNotFound() {
-        val response = rest.getForEntity(url(100), GetCartResponse::class.java)
+        val ex = assertThrows<HttpClientErrorException> {
+            rest.getForEntity(url(100), GetCartResponse::class.java)
+        }
 
-        assertEquals(200, response.statusCodeValue)
+        // THEN
+        assertEquals(404, ex.rawStatusCode)
 
-        val cart = response.body!!.cart
-        assertEquals(100L, cart.merchantId)
-        assertEquals(USER_ID, cart.accountId)
-        assertEquals(0, cart.products.size)
+        val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
+        assertEquals(ErrorURN.CART_NOT_FOUND.urn, response.error.code)
     }
 
     private fun url(merchantId: Long): String =

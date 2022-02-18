@@ -1,9 +1,11 @@
 package com.wutsi.platform.cart.`delegate`
 
 import com.wutsi.platform.cart.dao.CartRepository
-import com.wutsi.platform.cart.dto.Cart
 import com.wutsi.platform.cart.dto.GetCartResponse
+import com.wutsi.platform.cart.error.ErrorURN
 import com.wutsi.platform.cart.service.SecurityManager
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -22,20 +24,17 @@ class GetCartDelegate(
 
         // Cart
         val cart = dao.findByMerchantIdAndAccountId(merchantId, accountId)
-        if (cart.isPresent)
-            logger.add("cart_id", cart.get().id)
-        else
-            logger.add("cart_id", -1)
-
-        return GetCartResponse(
-            cart = cart
-                .map { it.toCart() }
-                .orElse(
-                    Cart(
-                        accountId = accountId,
-                        merchantId = merchantId,
+            .orElseThrow {
+                NotFoundException(
+                    error = Error(
+                        code = ErrorURN.CART_NOT_FOUND.urn
                     )
                 )
+            }
+
+        logger.add("cart_id", cart.id)
+        return GetCartResponse(
+            cart = cart.toCart()
         )
     }
 }
