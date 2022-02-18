@@ -31,5 +31,5 @@ public class EmptyCartControllerTest : AbstractSecuredController() {
     }
 
     private fun url(merchantId: Long): String =
-        "http://localhost:$port/v1/carts/$merchantId"
+        "http://localhost:$port/v1/carts/$merchantId/products"
 }

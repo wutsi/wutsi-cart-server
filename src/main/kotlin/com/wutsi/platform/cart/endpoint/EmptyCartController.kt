@@ -11,7 +11,7 @@ import kotlin.Long
 public class EmptyCartController(
     private val `delegate`: EmptyCartDelegate
 ) {
-    @DeleteMapping("/v1/carts/{merchant-id}")
+    @DeleteMapping("/v1/carts/{merchant-id}/products")
     @PreAuthorize(value = "hasAuthority('cart-read')")
     public fun invoke(@PathVariable(name = "merchant-id") merchantId: Long) {
         delegate.invoke(merchantId)

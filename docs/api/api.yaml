@@ -35,6 +35,32 @@ paths:
       security:
         - api_key: [ 'cart-read' ]
 
+  /v1/carts/{merchant-id}/products:
+    post:
+      operationId: "add-product"
+      description: Add a Product into a cart
+      parameters:
+        - in: path
+          name: merchant-id
+          description: ID of the merchant
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddProductRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Cart
+      security:
+        - api_key: [ 'cart-manage' ]
+
     delete:
       operationId: "empty-cart"
       description: Empty a cart
@@ -56,8 +82,8 @@ paths:
 
   /v1/carts/{merchant-id}/products/{product-id}:
     post:
-      operationId: "save-product"
-      description: Add/Update a Product into a cart
+      operationId: "update-product"
+      description: Update a Product into a cart
       parameters:
         - in: path
           name: merchant-id
@@ -78,7 +104,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SaveProductRequest'
+              $ref: '#/components/schemas/UpdateProductRequest'
       responses:
         200:
           description: Success
@@ -171,7 +197,20 @@ components:
           type: object
           $ref: "#/components/schemas/Cart"
 
-    SaveProductRequest:
+    AddProductRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        quantity:
+          type: integer
+          description: Number of items
+          default: 1
+          minimum: 1
+
+    UpdateProductRequest:
       type: object
       properties:
         quantity:

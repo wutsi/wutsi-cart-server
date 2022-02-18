@@ -1,7 +1,7 @@
 package com.wutsi.platform.cart.endpoint
 
-import com.wutsi.platform.cart.`delegate`.SaveProductDelegate
-import com.wutsi.platform.cart.dto.SaveProductRequest
+import com.wutsi.platform.cart.`delegate`.AddProductDelegate
+import com.wutsi.platform.cart.dto.AddProductRequest
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.`annotation`.PathVariable
 import org.springframework.web.bind.`annotation`.PostMapping
@@ -11,16 +11,16 @@ import javax.validation.Valid
 import kotlin.Long
 
 @RestController
-public class SaveProductController(
-    private val `delegate`: SaveProductDelegate
+public class AddProductController(
+    private val `delegate`: AddProductDelegate
 ) {
-    @PostMapping("/v1/carts/{merchant-id}/products/{product-id}")
+    @PostMapping("/v1/carts/{merchant-id}/products")
     @PreAuthorize(value = "hasAuthority('cart-manage')")
     public fun invoke(
         @PathVariable(name = "merchant-id") merchantId: Long,
-        @PathVariable(name = "product-id") productId: Long,
-        @Valid @RequestBody request: SaveProductRequest
+        @Valid @RequestBody
+        request: AddProductRequest
     ) {
-        delegate.invoke(merchantId, productId, request)
+        delegate.invoke(merchantId, request)
     }
 }

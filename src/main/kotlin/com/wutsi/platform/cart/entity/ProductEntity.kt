@@ -18,7 +18,7 @@ data class ProductEntity(
     val id: Long? = null,
 
     val productId: Long = -1,
-    var quantity: Int = 1,
+    var quantity: Int = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_fk")
