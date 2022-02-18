@@ -33,6 +33,8 @@ class GetCartDelegate(
             }
 
         logger.add("cart_id", cart.id)
+        logger.add("cart_product_count", cart.products.size)
+        logger.add("cart_product_ids", cart.products.map { it.id })
         return GetCartResponse(
             cart = cart.toCart()
         )
