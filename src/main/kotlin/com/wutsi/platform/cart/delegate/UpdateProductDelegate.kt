@@ -7,6 +7,7 @@ import com.wutsi.platform.cart.error.ErrorURN
 import com.wutsi.platform.cart.service.SecurityManager
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -15,7 +16,8 @@ import javax.transaction.Transactional
 class UpdateProductDelegate(
     private val cartDao: CartRepository,
     private val productDao: ProductRepository,
-    private val securityManager: SecurityManager
+    private val securityManager: SecurityManager,
+    private val logger: KVLogger,
 ) {
     @CacheEvict(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
     @Transactional
@@ -33,6 +35,7 @@ class UpdateProductDelegate(
                     )
                 )
             }
+        logger.add("cart_id", cart.id)
 
         val product = productDao.findByCartAndProductId(cart, productId)
             .orElseThrow {
@@ -45,5 +48,7 @@ class UpdateProductDelegate(
 
         product.quantity = request.quantity
         productDao.save(product)
+        logger.add("product_id", product.id)
+        logger.add("quantity", product.quantity)
     }
 }

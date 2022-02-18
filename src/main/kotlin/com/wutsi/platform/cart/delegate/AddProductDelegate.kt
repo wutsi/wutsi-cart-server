@@ -6,6 +6,7 @@ import com.wutsi.platform.cart.dto.AddProductRequest
 import com.wutsi.platform.cart.entity.CartEntity
 import com.wutsi.platform.cart.entity.ProductEntity
 import com.wutsi.platform.cart.service.SecurityManager
+import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 import javax.transaction.Transactional
@@ -14,15 +15,22 @@ import javax.transaction.Transactional
 class AddProductDelegate(
     private val cartDao: CartRepository,
     private val productDao: ProductRepository,
-    private val securityManager: SecurityManager
-
+    private val securityManager: SecurityManager,
+    private val logger: KVLogger,
 ) {
     @Transactional
     fun invoke(merchantId: Long, request: AddProductRequest) {
+        // Cart
         val cart = getCart(merchantId)
+
+        // Product
         val product = getProduct(request.productId, cart)
         product.quantity += request.quantity
         productDao.save(product)
+
+        logger.add("cart_id", cart.id)
+        logger.add("product_id", product.id)
+        logger.add("quantity", product.quantity)
     }
 
     private fun getCart(merchantId: Long): CartEntity {
