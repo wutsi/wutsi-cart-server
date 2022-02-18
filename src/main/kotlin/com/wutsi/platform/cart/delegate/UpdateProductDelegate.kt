@@ -26,7 +26,11 @@ class UpdateProductDelegate(
         productId: Long,
         request: UpdateProductRequest
     ) {
+        // Account
         val accountId = securityManager.accountId()
+        logger.add("account_id", accountId)
+
+        // Cart
         val cart = cartDao.findByMerchantIdAndAccountId(merchantId, accountId)
             .orElseThrow {
                 NotFoundException(
@@ -37,6 +41,7 @@ class UpdateProductDelegate(
             }
         logger.add("cart_id", cart.id)
 
+        // Product
         val product = productDao.findByCartAndProductId(cart, productId)
             .orElseThrow {
                 NotFoundException(

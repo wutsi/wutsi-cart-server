@@ -18,7 +18,11 @@ class EmptyCartDelegate(
     @CacheEvict(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
     @Transactional
     fun invoke(merchantId: Long) {
+        // Account
         val accountId = securityManager.accountId()
+        logger.add("account_id", accountId)
+
+        // Cart
         val cart = cartDao.findByMerchantIdAndAccountId(merchantId, accountId)
         if (cart.isEmpty)
             return

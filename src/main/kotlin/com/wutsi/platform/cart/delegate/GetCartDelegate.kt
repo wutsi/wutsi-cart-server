@@ -16,10 +16,16 @@ class GetCartDelegate(
 ) {
     @Cacheable(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
     fun invoke(merchantId: Long): GetCartResponse {
+        // Account
         val accountId = securityManager.accountId()
+        logger.add("account_id", accountId)
+
+        // Cart
         val cart = dao.findByMerchantIdAndAccountId(merchantId, accountId)
         if (cart.isPresent)
             logger.add("cart_id", cart.get().id)
+        else
+            logger.add("cart_id", -1)
 
         return GetCartResponse(
             cart = cart

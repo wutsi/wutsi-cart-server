@@ -20,8 +20,12 @@ class AddProductDelegate(
 ) {
     @Transactional
     fun invoke(merchantId: Long, request: AddProductRequest) {
+        // Account
+        val accountId = securityManager.accountId()
+        logger.add("account_id", accountId)
+
         // Cart
-        val cart = getCart(merchantId)
+        val cart = getCart(merchantId, accountId)
 
         // Product
         val product = getProduct(request.productId, cart)
@@ -33,8 +37,7 @@ class AddProductDelegate(
         logger.add("quantity", product.quantity)
     }
 
-    private fun getCart(merchantId: Long): CartEntity {
-        val accountId = securityManager.accountId()
+    private fun getCart(merchantId: Long, accountId: Long): CartEntity {
         val opt = cartDao.findByMerchantIdAndAccountId(merchantId, accountId)
         if (opt.isPresent)
             return opt.get()
