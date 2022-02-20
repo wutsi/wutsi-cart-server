@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>wutsi-cart-server</artifactId>
-  <groupId>com.wutsi.platform.cart</groupId>
+  <groupId>com.wutsi.ecommerce.cart</groupId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>wutsi-cart-server</name>
@@ -261,7 +261,8 @@
             <phase>validate</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classname="com.pinterest.ktlint.Main"
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
+                      classname="com.pinterest.ktlint.Main"
                       classpathref="maven.plugin.classpath">
                   <arg value="src/**/*.kt"/>
                   <!-- to generate report in checkstyle format prepend following args: -->
