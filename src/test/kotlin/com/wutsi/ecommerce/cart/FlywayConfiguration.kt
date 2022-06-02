@@ -1,15 +1,13 @@
 package com.wutsi.ecommerce.cart
 
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy
-import org.springframework.context.`annotation`.Bean
-import org.springframework.context.`annotation`.Configuration
-import kotlin.Boolean
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 @Configuration
-public class FlywayConfiguration {
+class FlywayConfiguration {
     @Bean
-    public fun flywayMigrationStrategy(): FlywayMigrationStrategy = FlywayMigrationStrategy {
-        flyway ->
+    fun flywayMigrationStrategy(): FlywayMigrationStrategy = FlywayMigrationStrategy { flyway ->
         if (!cleaned) {
             flyway.clean()
             cleaned = true
@@ -17,7 +15,7 @@ public class FlywayConfiguration {
         flyway.migrate()
     }
 
-    public companion object {
-        public var cleaned: Boolean = false
+    companion object {
+        var cleaned: Boolean = false
     }
 }
