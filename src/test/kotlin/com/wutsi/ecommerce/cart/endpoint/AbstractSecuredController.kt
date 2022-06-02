@@ -20,27 +20,11 @@ abstract class AbstractSecuredController {
 
     private lateinit var tracingContext: TracingContext
 
-//    @MockBean
-//    protected lateinit var tenantApi: WutsiTenantApi
-
     protected lateinit var rest: RestTemplate
 
     @BeforeEach
     open fun setUp() {
         tracingContext = TestTracingContext(tenantId = TENANT_ID.toString())
-
-//        val tenant = Tenant(
-//            id = 1,
-//            name = "test",
-//            logos = listOf(
-//                Logo(type = "PICTORIAL", url = "http://www.goole.com/images/1.png")
-//            ),
-//            countries = listOf("CM"),
-//            languages = listOf("en", "fr"),
-//            currency = "XAF",
-//            domainName = "www.wutsi.com",
-//        )
-//        doReturn(GetTenantResponse(tenant)).whenever(tenantApi).getTenant(any())
 
         rest = createResTemplate()
     }

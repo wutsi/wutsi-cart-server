@@ -6,6 +6,7 @@ import com.wutsi.ecommerce.cart.service.SecurityManager
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
+import java.time.OffsetDateTime
 import javax.transaction.Transactional
 
 @Service
@@ -23,13 +24,18 @@ class RemoveProductDelegate(
         logger.add("account_id", accountId)
 
         // Cart
-        val cart = cartDao.findByMerchantIdAndAccountId(merchantId, accountId)
-        if (cart.isEmpty)
-            return
-        logger.add("cart_id", cart.get().id)
+        val cart = cartDao.findByMerchantIdAndAccountId(merchantId, accountId).orElse(null)
+            ?: return
+        logger.add("cart_id", cart.id)
 
-        val opt = productDao.findByCartAndProductId(cart.get(), productId)
-        if (opt.isPresent)
+        val opt = productDao.findByCartAndProductId(cart, productId)
+        if (opt.isPresent) {
+            // Delete the product
             productDao.delete(opt.get())
+
+            // Update the cart
+            cart.updated = OffsetDateTime.now()
+            cartDao.save(cart)
+        }
     }
 }

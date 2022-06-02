@@ -11,6 +11,30 @@ servers:
     description: Production
 
 paths:
+  /v1/carts/search:
+    post:
+      operationId: "search-carts"
+      description: Search Cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchCartRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchCartResponse'
+        403:
+          description: The caller is not authorized to call this endpoint
+      tags:
+        - Product
+      security:
+        - api_key: [ 'cart-read' ]
+
   /v1/carts/{merchant-id}:
     get:
       operationId: "get-cart"
@@ -189,6 +213,10 @@ components:
           type: string
           format: date-time
           description: Creation Date/Time
+        updated:
+          type: string
+          format: date-time
+          description: Last modification Date/Time
 
     GetCartResponse:
       type: object
@@ -218,3 +246,47 @@ components:
           description: Number of items
           default: 1
           minimum: 1
+
+    SearchCartRequest:
+      type: object
+      properties:
+        merchantId:
+          type: integer
+          format: int64
+          nullable: true
+        accountId:
+          type: integer
+          format: int64
+          nullable: true
+        limit:
+          type: integer
+          default: 30
+        offset:
+          type: integer
+          default: 0
+
+    SearchCartResponse:
+      type: object
+      properties:
+        carts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartSummary"
+
+    CartSummary:
+      type: object
+      properties:
+        merchantId:
+          type: integer
+          format: int64
+        accountId:
+          type: integer
+          format: int64
+        created:
+          type: string
+          format: date-time
+          description: Creation Date/Time
+        updated:
+          type: string
+          format: date-time
+          description: Last modification Date/Time

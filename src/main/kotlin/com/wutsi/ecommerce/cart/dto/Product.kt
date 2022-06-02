@@ -1,7 +1,9 @@
 package com.wutsi.ecommerce.cart.dto
 
-import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
+import kotlin.Int
+import kotlin.Long
 
 public data class Product(
     public val productId: Long = 0,

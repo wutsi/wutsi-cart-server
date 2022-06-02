@@ -23,5 +23,6 @@ data class CartEntity(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart")
     val products: MutableList<ProductEntity> = mutableListOf(),
 
-    val created: OffsetDateTime = OffsetDateTime.now()
+    val created: OffsetDateTime = OffsetDateTime.now(),
+    var updated: OffsetDateTime = OffsetDateTime.now()
 )

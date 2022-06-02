@@ -10,6 +10,7 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
+import java.time.OffsetDateTime
 import javax.transaction.Transactional
 
 @Service
@@ -55,5 +56,9 @@ class UpdateProductDelegate(
         productDao.save(product)
         logger.add("product_id", product.id)
         logger.add("quantity", product.quantity)
+
+        // Cart
+        cart.updated = OffsetDateTime.now()
+        cartDao.save(cart)
     }
 }
