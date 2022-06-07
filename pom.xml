@@ -33,7 +33,10 @@
     <hikari-cp.version>5.0.1</hikari-cp.version>
     <postgresql.version>42.3.6</postgresql.version>
     <flyway.version>8.5.11</flyway.version>
-    <wutsi-platform-core.version>0.0.101</wutsi-platform-core.version>
+
+    <wutsi-platform-core.version>0.0.115</wutsi-platform-core.version>
+    <wutsi-order.version>0.0.28</wutsi-order.version>
+    <wutsi-security.version>0.0.21</wutsi-security.version>
   </properties>
 
   <dependencies>
@@ -42,6 +45,17 @@
       <artifactId>wutsi-platform-core</artifactId>
       <version>${wutsi-platform-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi.platform.security</groupId>
+      <artifactId>wutsi-security-sdk-kotlin</artifactId>
+      <version>${wutsi-security.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.ecommerce.order</groupId>
+      <artifactId>wutsi-order-sdk-kotlin</artifactId>
+      <version>${wutsi-order.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>

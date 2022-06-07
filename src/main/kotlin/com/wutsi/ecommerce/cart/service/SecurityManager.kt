@@ -1,5 +1,6 @@
 package com.wutsi.ecommerce.cart.service
 
+import com.wutsi.platform.core.security.SubjectType
 import com.wutsi.platform.core.security.WutsiPrincipal
 import com.wutsi.platform.core.tracing.TracingContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -12,8 +13,11 @@ class SecurityManager(
     fun tenantId(): Long =
         tracingContext.tenantId()!!.toLong()
 
-    fun accountId(): Long =
-        principal().id.toLong()
+    fun accountId(): Long? =
+        if (principal().type == SubjectType.USER)
+            principal().id.toLong()
+        else
+            null
 
     private fun principal(): WutsiPrincipal {
         val authentication = SecurityContextHolder.getContext().authentication

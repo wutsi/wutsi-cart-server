@@ -28,7 +28,7 @@ class UpdateProductDelegate(
         request: UpdateProductRequest
     ) {
         // Account
-        val accountId = securityManager.accountId()
+        val accountId = securityManager.accountId()!!
         logger.add("account_id", accountId)
 
         // Cart

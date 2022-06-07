@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
@@ -19,9 +19,9 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/EmptyCartController.sql"])
-public class EmptyCartControllerTest : AbstractSecuredController() {
+class EmptyCartControllerTest : AbstractSecuredController() {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     @Autowired
     private lateinit var cartDao: CartRepository
@@ -30,10 +30,10 @@ public class EmptyCartControllerTest : AbstractSecuredController() {
     private lateinit var productDao: ProductRepository
 
     @MockBean
-    private lateinit var cacheManager: CacheManager
+    private lateinit var cache: Cache
 
     @MockBean
-    private lateinit var cache: Cache
+    private lateinit var cacheManager: CacheManager
 
     @BeforeEach
     override fun setUp() {
@@ -43,7 +43,7 @@ public class EmptyCartControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun `empty cart`() {
+    fun `empty cart`() {
         rest.delete(url(200))
 
         val cart = cartDao.findByMerchantIdAndAccountId(200, AbstractSecuredController.USER_ID)

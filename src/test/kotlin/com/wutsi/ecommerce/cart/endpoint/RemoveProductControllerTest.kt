@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
@@ -19,9 +19,9 @@ import kotlin.test.assertFalse
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/RemoveProductController.sql"])
-public class RemoveProductControllerTest : AbstractSecuredController() {
+class RemoveProductControllerTest : AbstractSecuredController() {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     @Autowired
     private lateinit var cartDao: CartRepository
@@ -30,10 +30,10 @@ public class RemoveProductControllerTest : AbstractSecuredController() {
     private lateinit var productDao: ProductRepository
 
     @MockBean
-    private lateinit var cacheManager: CacheManager
+    private lateinit var cache: Cache
 
     @MockBean
-    private lateinit var cache: Cache
+    private lateinit var cacheManager: CacheManager
 
     @BeforeEach
     override fun setUp() {
@@ -43,13 +43,13 @@ public class RemoveProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun `Remove from Cart that doesn't exist`() {
+    fun `Remove from Cart that doesn't exist`() {
         rest.delete(url(100, 1))
         verify(cache).evict(any())
     }
 
     @Test
-    public fun `Remove Product from Cart`() {
+    fun `Remove Product from Cart`() {
         rest.delete(url(200, 1))
 
         val cart = cartDao.findByMerchantIdAndAccountId(200, USER_ID)
@@ -60,7 +60,7 @@ public class RemoveProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun `Remove Delete Product from Cart`() {
+    fun `Remove Delete Product from Cart`() {
         rest.delete(url(200, 9))
 
         val cart = cartDao.findByMerchantIdAndAccountId(200, USER_ID)
@@ -71,7 +71,7 @@ public class RemoveProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun `Remove inexisting Product from Cart`() {
+    fun `Remove inexisting Product from Cart`() {
         rest.delete(url(200, 999))
 
         val cart = cartDao.findByMerchantIdAndAccountId(200, USER_ID)

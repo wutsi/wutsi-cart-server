@@ -17,7 +17,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
@@ -26,9 +26,9 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/UpdateProductController.sql"])
-public class UpdateProductControllerTest : AbstractSecuredController() {
+class UpdateProductControllerTest : AbstractSecuredController() {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     @Autowired
     private lateinit var cartDao: CartRepository
@@ -50,7 +50,7 @@ public class UpdateProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun update() {
+    fun update() {
         // WHEN
         val request = UpdateProductRequest(quantity = 10)
         val response = rest.postForEntity(url(100, 1), request, Any::class.java)
@@ -69,7 +69,7 @@ public class UpdateProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun updateWith0() {
+    fun updateWith0() {
         // WHEN
         val request = UpdateProductRequest(quantity = 0)
         val ex = assertThrows<HttpClientErrorException> {
@@ -81,7 +81,7 @@ public class UpdateProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun cartNotFound() {
+    fun cartNotFound() {
         // WHEN
         val request = UpdateProductRequest(quantity = 1)
         val ex = assertThrows<HttpClientErrorException> {
@@ -96,7 +96,7 @@ public class UpdateProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun productNotFound() {
+    fun productNotFound() {
         val request = UpdateProductRequest(quantity = 1)
         val ex = assertThrows<HttpClientErrorException> {
             rest.postForEntity(url(100, 99999), request, Any::class.java)

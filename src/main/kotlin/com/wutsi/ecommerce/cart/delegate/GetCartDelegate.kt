@@ -19,7 +19,7 @@ class GetCartDelegate(
     @Cacheable(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
     fun invoke(merchantId: Long): GetCartResponse {
         // Account
-        val accountId = securityManager.accountId()
+        val accountId = securityManager.accountId()!!
         logger.add("account_id", accountId)
 
         // Cart

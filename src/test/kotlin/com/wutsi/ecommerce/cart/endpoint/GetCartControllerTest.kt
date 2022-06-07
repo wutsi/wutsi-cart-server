@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
@@ -22,15 +22,15 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/GetCartController.sql"])
-public class GetCartControllerTest : AbstractSecuredController() {
+class GetCartControllerTest : AbstractSecuredController() {
     @LocalServerPort
-    public val port: Int = 0
-
-    @MockBean
-    private lateinit var cacheManager: CacheManager
+    val port: Int = 0
 
     @MockBean
     private lateinit var cache: Cache
+
+    @MockBean
+    private lateinit var cacheManager: CacheManager
 
     @BeforeEach
     override fun setUp() {
@@ -40,7 +40,7 @@ public class GetCartControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun get() {
+    fun get() {
         val response = rest.getForEntity(url(200), GetCartResponse::class.java)
 
         assertEquals(200, response.statusCodeValue)
@@ -56,7 +56,7 @@ public class GetCartControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun cartNotFound() {
+    fun cartNotFound() {
         val ex = assertThrows<HttpClientErrorException> {
             rest.getForEntity(url(100), GetCartResponse::class.java)
         }

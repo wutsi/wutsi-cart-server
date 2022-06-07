@@ -20,7 +20,7 @@ class RemoveProductDelegate(
     @Transactional
     fun invoke(merchantId: Long, productId: Long) {
         // Account
-        val accountId = securityManager.accountId()
+        val accountId = securityManager.accountId()!!
         logger.add("account_id", accountId)
 
         // Cart

@@ -18,9 +18,11 @@ class EmptyCartDelegate(
 ) {
     @CacheEvict(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
     @Transactional
-    fun invoke(merchantId: Long) {
+    fun invoke(merchantId: Long, customerId: Long? = null) {
+        logger.add("merchant_id", merchantId)
+
         // Account
-        val accountId = securityManager.accountId()
+        val accountId = customerId ?: securityManager.accountId() ?: -1
         logger.add("account_id", accountId)
 
         // Cart

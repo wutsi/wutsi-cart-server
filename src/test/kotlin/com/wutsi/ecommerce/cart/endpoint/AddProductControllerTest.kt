@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.test.context.jdbc.Sql
@@ -21,9 +21,9 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/AddProductController.sql"])
-public class AddProductControllerTest : AbstractSecuredController() {
+class AddProductControllerTest : AbstractSecuredController() {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     @Autowired
     private lateinit var cartDao: CartRepository
@@ -32,10 +32,10 @@ public class AddProductControllerTest : AbstractSecuredController() {
     private lateinit var productDao: ProductRepository
 
     @MockBean
-    private lateinit var cacheManager: CacheManager
+    private lateinit var cache: Cache
 
     @MockBean
-    private lateinit var cache: Cache
+    private lateinit var cacheManager: CacheManager
 
     @BeforeEach
     override fun setUp() {
@@ -45,7 +45,7 @@ public class AddProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun createCart() {
+    fun createCart() {
         // WHEN
         val request = AddProductRequest(quantity = 3, productId = 1L)
         val response = rest.postForEntity(url(100), request, Any::class.java)
@@ -64,7 +64,7 @@ public class AddProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun addProduct() {
+    fun addProduct() {
         // WHEN
         val request = AddProductRequest(quantity = 1, productId = 10L)
         val response = rest.postForEntity(url(100), request, Any::class.java)
@@ -83,7 +83,7 @@ public class AddProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun incrementProducts() {
+    fun incrementProducts() {
         // WHEN
         val request = AddProductRequest(quantity = 3, productId = 2L)
         val response = rest.postForEntity(url(100), request, Any::class.java)
