@@ -6,59 +6,12 @@
 
 API for managing Online Cart
 
-# Installation Prerequisites
-## Database Setup
-- Install postgres
-- Create account with username/password: `postgres`/`postgres`
-- Create a database named `wutsi-cart`
+# Architecture
 
-## Configure Github
-- Generate a Github token for accessing packages from GibHub
-  - Goto [https://github.com/settings/tokens](https://github.com/settings/tokens)
-  - Click on `Generate New Token`
-  - Give a value to your token
-  - Select the permissions `read:packages`
-  - Generate the token
-- Set your GitHub environment variables on your machine:
-  - `GITHUB_TOKEN = your-token-value`
-  - `GITHUB_USER = your-github-user-name`
-
-## Maven Setup
-- Download Instance [Maven 3.6+](https://maven.apache.org/download.cgi)
-- Add into `~/m2/settings.xml`
-```
-    <settings>
-        ...
-        <servers>
-            ...
-            <server>
-              <id>github</id>
-              <username>${env.GITHUB_USER}</username>
-              <password>${env.GITHUB_TOKEN}</password>
-            </server>
-        </servers>
-    </settings>
-```
-
-## Usage
-- Install
-```
-$ git clone git@github.com:wutsi/wutsi-cart-server.git
-```
-
-- Build
-```
-$ cd wutsi-cart-server
-$ mvn clean install
-```
-
-- Launch the API
-```
-$ mvn spring-boot:run
-```
-
-That's it... the API is up and running! Start sending requests :-)
+![](https://www.plantuml.com/plantuml/png/ROnD2i8m64Jttoc6keu7S56wyG0kHRf8cq65D97yj4BnxbP5gP3jcpUlYKc7b0ShlHzktj4bz0l1l0AdAQTuLI-k8iF8q69pfBL-4XYTTASZKPckcWLhknKyH8f_fUf_Sn4FcPbGHL-A4Upl_KMxC-Mx-s0OViAsnZkwmuTpf4lbL8rIGHewamVx1000)
 
 # Links
+
+- [Events](docs/Event.md)
 - [API](https://wutsi.github.io/wutsi-cart-server/api/)
 - [Documentation](docs/)
