@@ -14,9 +14,9 @@ class EventHandler(
 ) {
     @EventListener
     fun onEvent(event: Event) {
-        if (EventURN.ORDER_DONE.urn == event.type) {
+        if (EventURN.ORDER_OPENED.urn == event.type) {
             val payload = objectMapper.readValue(event.payload, OrderEventPayload::class.java)
-            orderEventHandler.onOrderDone(payload.orderId)
+            orderEventHandler.onOrderOpened(payload.orderId)
         }
     }
 }

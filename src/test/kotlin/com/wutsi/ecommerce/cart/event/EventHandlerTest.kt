@@ -18,11 +18,11 @@ internal class EventHandlerTest {
     private lateinit var orderEventHandler: OrderEventHandler
 
     @Test
-    fun onEvent() {
+    fun onOrderOpened() {
         // GIVEN
         val orderId = "4034093409"
         val event = Event(
-            id = EventURN.ORDER_DONE.urn,
+            id = EventURN.ORDER_OPENED.urn,
             payload = ObjectMapper().writeValueAsString(
                 OrderEventPayload(
                     orderId = orderId
@@ -34,6 +34,6 @@ internal class EventHandlerTest {
         eventHandler.onEvent(event)
 
         // THEN
-        orderEventHandler.onOrderDone(orderId)
+        orderEventHandler.onOrderOpened(orderId)
     }
 }

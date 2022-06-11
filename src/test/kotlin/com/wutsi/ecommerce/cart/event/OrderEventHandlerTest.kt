@@ -39,7 +39,7 @@ internal class OrderEventHandlerTest {
     @Test
     fun onOrderDone() {
         // WHEN
-        eventHandler.onOrderDone(order.id)
+        eventHandler.onOrderOpened(order.id)
 
         // THEN
         verify(delegage).invoke(order.merchantId, order.accountId)

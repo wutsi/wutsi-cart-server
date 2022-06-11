@@ -18,15 +18,19 @@ class EmptyCartDelegate(
         logger.add("merchant_id", merchantId)
 
         // Account
-        val accountId = customerId ?: securityManager.accountId() ?: -1
+        val accountId = customerId
+            ?: securityManager.accountId()
+            ?: return
         logger.add("account_id", accountId)
 
         // Cart
-        val cart = cartDao.findByMerchantIdAndAccountId(merchantId, accountId).orElse(null)
+        val cart = cartDao.findByMerchantIdAndAccountId(merchantId, accountId)
+            .orElse(null)
             ?: return
         logger.add("cart_id", cart.id)
 
         val products = productDao.findByCart(cart)
+        logger.add("product_count", products.size)
         if (products.isNotEmpty()) {
             // Empty
             productDao.deleteAll(products)

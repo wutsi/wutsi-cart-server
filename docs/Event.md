@@ -2,6 +2,6 @@
 
 ## Event Consumed
 
-| Event                                            | Source        | Description                                        |
-|--------------------------------------------------|---------------|----------------------------------------------------|
-| `urn:wutsi:event:order:order-done`               | wutsi-order   | This event will empty of the cart of the customer  |
+| Event                                | Source        | Description                                        |
+|--------------------------------------|---------------|----------------------------------------------------|
+| `urn:wutsi:event:order:order-opened` | wutsi-order   | This event will empty of the cart of the customer  |

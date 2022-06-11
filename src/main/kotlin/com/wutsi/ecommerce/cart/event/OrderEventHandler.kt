@@ -11,12 +11,8 @@ class OrderEventHandler(
     private val delegate: EmptyCartDelegate,
     private val logger: KVLogger,
 ) {
-    fun onOrderDone(orderId: String) {
-        logger.add("order_id", orderId)
-
+    fun onOrderOpened(orderId: String) {
         val order = orderApi.getOrder(orderId).order
-        logger.add("merchant_id", order.merchantId)
-
         delegate.invoke(order.merchantId, order.accountId)
     }
 }
