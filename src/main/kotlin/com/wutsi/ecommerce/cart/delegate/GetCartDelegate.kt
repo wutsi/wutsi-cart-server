@@ -6,21 +6,28 @@ import com.wutsi.ecommerce.cart.error.ErrorURN
 import com.wutsi.ecommerce.cart.service.SecurityManager
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.NotFoundException
-import com.wutsi.platform.core.logging.KVLogger
-import org.springframework.cache.annotation.Cacheable
+import com.wutsi.platform.core.error.exception.UnauthorizedException
 import org.springframework.stereotype.Service
 
 @Service
 class GetCartDelegate(
     private val dao: CartRepository,
     private val securityManager: SecurityManager,
-    private val logger: KVLogger,
-) {
-    @Cacheable(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
+) : AbstractCartDelegate() {
     fun invoke(merchantId: Long): GetCartResponse {
-        // Account
-        val accountId = securityManager.accountId()!!
+        val accountId = securityManager.accountId()
+            ?: throw UnauthorizedException(
+                error = Error(
+                    code = ErrorURN.CART_NOT_FOUND.urn
+                )
+            )
         logger.add("account_id", accountId)
+
+        var response = getFromCache(accountId, merchantId)
+        if (response != null) {
+            logger.add("cache_hit", true)
+            return response
+        }
 
         // Cart
         val cart = dao.findByMerchantIdAndAccountId(merchantId, accountId)
@@ -31,12 +38,14 @@ class GetCartDelegate(
                     )
                 )
             }
+        response = GetCartResponse(
+            cart = cart.toCart()
+        )
+        putInCache(response)
 
         logger.add("cart_id", cart.id)
         logger.add("cart_product_count", cart.products.size)
         logger.add("cart_product_ids", cart.products.map { it.id })
-        return GetCartResponse(
-            cart = cart.toCart()
-        )
+        return response
     }
 }

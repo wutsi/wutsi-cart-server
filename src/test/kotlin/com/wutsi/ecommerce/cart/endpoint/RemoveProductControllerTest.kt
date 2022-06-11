@@ -2,6 +2,7 @@ package com.wutsi.ecommerce.cart.endpoint
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.ecommerce.cart.dao.CartRepository
@@ -45,7 +46,7 @@ class RemoveProductControllerTest : AbstractSecuredController() {
     @Test
     fun `Remove from Cart that doesn't exist`() {
         rest.delete(url(100, 1))
-        verify(cache).evict(any())
+        verify(cache, never()).evict(any())
     }
 
     @Test
@@ -60,14 +61,14 @@ class RemoveProductControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    fun `Remove Delete Product from Cart`() {
+    fun `Remove deleted Product from Cart`() {
         rest.delete(url(200, 9))
 
         val cart = cartDao.findByMerchantIdAndAccountId(200, USER_ID)
         val product = productDao.findByCartAndProductId(cart.get(), 9)
         assertFalse(product.isPresent)
 
-        verify(cache).evict(any())
+        verify(cache, never()).evict(any())
     }
 
     @Test
@@ -78,7 +79,7 @@ class RemoveProductControllerTest : AbstractSecuredController() {
         val product = productDao.findByCartAndProductId(cart.get(), 999)
         assertFalse(product.isPresent)
 
-        verify(cache).evict(any())
+        verify(cache, never()).evict(any())
     }
 
     private fun url(merchantId: Long, productId: Long): String =

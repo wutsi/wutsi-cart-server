@@ -15,6 +15,8 @@ class OrderEventHandler(
         logger.add("order_id", orderId)
 
         val order = orderApi.getOrder(orderId).order
+        logger.add("merchant_id", order.merchantId)
+
         delegate.invoke(order.merchantId, order.accountId)
     }
 }

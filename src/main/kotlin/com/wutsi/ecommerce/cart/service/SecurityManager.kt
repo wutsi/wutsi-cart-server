@@ -10,17 +10,19 @@ import org.springframework.stereotype.Service
 class SecurityManager(
     private val tracingContext: TracingContext
 ) {
-    fun tenantId(): Long =
-        tracingContext.tenantId()!!.toLong()
+    fun tenantId(): Long? =
+        tracingContext.tenantId()?.toLong()
 
     fun accountId(): Long? =
-        if (principal().type == SubjectType.USER)
-            principal().id.toLong()
+        if (principal()?.type == SubjectType.USER)
+            principal()?.id?.toLong()
         else
             null
 
-    private fun principal(): WutsiPrincipal {
+    private fun principal(): WutsiPrincipal? {
         val authentication = SecurityContextHolder.getContext().authentication
+            ?: return null
+
         val principal = authentication.principal
         return principal as WutsiPrincipal
     }

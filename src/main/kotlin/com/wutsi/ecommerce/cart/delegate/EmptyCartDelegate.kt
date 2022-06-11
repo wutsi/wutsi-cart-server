@@ -3,8 +3,6 @@ package com.wutsi.ecommerce.cart.delegate
 import com.wutsi.ecommerce.cart.dao.CartRepository
 import com.wutsi.ecommerce.cart.dao.ProductRepository
 import com.wutsi.ecommerce.cart.service.SecurityManager
-import com.wutsi.platform.core.logging.KVLogger
-import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 import javax.transaction.Transactional
@@ -14,9 +12,7 @@ class EmptyCartDelegate(
     private val cartDao: CartRepository,
     private val productDao: ProductRepository,
     private val securityManager: SecurityManager,
-    private val logger: KVLogger,
-) {
-    @CacheEvict(cacheNames = ["wutsi-cart"], keyGenerator = "cartKeyGenerator")
+) : AbstractCartDelegate() {
     @Transactional
     fun invoke(merchantId: Long, customerId: Long? = null) {
         logger.add("merchant_id", merchantId)
@@ -38,6 +34,9 @@ class EmptyCartDelegate(
             // Update the cart
             cart.updated = OffsetDateTime.now()
             cartDao.save(cart)
+
+            // Update cache
+            evictFromCache(cart)
         }
     }
 }
